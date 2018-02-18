@@ -10,16 +10,24 @@ buildscript {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
         classpath("org.jetbrains.kotlin:kotlin-allopen:${kotlinVersion}")
+        classpath('se.transmode.gradle:gradle-docker:1.2')
     }
 }
 
 apply plugin: 'kotlin'
 apply plugin: 'kotlin-spring'
 apply plugin: 'org.springframework.boot'
+apply plugin: 'docker'
 
 group = 'mobi.riemer.azure'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
+
+jar {
+    baseName = 'tweetsearch'
+    version =  '0.0.1'
+}
+
 compileKotlin {
     kotlinOptions {
         freeCompilerArgs = ["-Xjsr305=strict"]
@@ -30,6 +38,22 @@ compileTestKotlin {
     kotlinOptions {
         freeCompilerArgs = ["-Xjsr305=strict"]
         jvmTarget = "1.8"
+    }
+}
+
+task buildDocker(type: Docker, dependsOn: build) {
+    push = false
+    applicationName = jar.baseName
+    dockerfile = file('src/main/docker/Dockerfile')
+    setEnvironment('SPRING_SOCIAL_TWITTER_APPID',System.getenv('SPRING_SOCIAL_TWITTER_APPID'))
+    setEnvironment('SPRING_SOCIAL_TWITTER_APPSECRET',System.getenv('SPRING_SOCIAL_TWITTER_APPSECRET'))
+    setEnvironment('TWITTER_ACCESS_TOKEN',System.getenv('TWITTER_ACCESS_TOKEN'))
+    setEnvironment('TWITTER_ACCESS_TOKEN_SECRET',System.getenv('TWITTER_ACCESS_TOKEN_SECRET'))
+    doFirst {
+        copy {
+            from jar
+            into stageDir
+        }
     }
 }
 
