@@ -1,10 +1,10 @@
 language: kotlin
 jdk:
-  - oraclejdk8
+ - oraclejdk8
 install: gradle buildDocker
 
 services:
-  - docker
+ - docker
 
 #deploy:
 #  provider: azure_web_apps
