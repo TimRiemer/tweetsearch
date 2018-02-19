@@ -25,10 +25,10 @@ class TweetsearchApplicationTests {
         val results = twitterTemplate.searchOperations().search(
                 SearchParameters("kotlin")
                         .resultType(SearchParameters.ResultType.RECENT)
-                        .count(100))
+                        .count(10))
 
         val tweets = results.tweets
 
-        assert(tweets.count() == 100)
+        assert(tweets.count() == 10)
     }
 }
