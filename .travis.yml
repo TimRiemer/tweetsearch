@@ -1,6 +1,6 @@
 language: kotlin
 jdk: oraclejdk8
-script: ./gradlew buildDocker
+script: ./gradlew buildDocker -Xtest
 
 services: docker
 
